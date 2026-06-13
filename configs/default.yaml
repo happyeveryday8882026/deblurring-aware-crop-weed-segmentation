@@ -1,0 +1,46 @@
+# Default configuration reproducing the settings reported in the manuscript
+# (Section 4, "Implementation Details and Training Settings").
+
+device: auto            # auto-selects cuda > mps (Apple) > cpu
+
+model:
+  encoder: resnet50     # one of resnet18 | resnet34 | resnet50 | resnet101
+  num_classes: 3        # background, crop (sorghum), weed
+  pretrained: true      # ImageNet-pretrained encoder (torchvision weights)
+  use_skip: true        # encoder-decoder skip connections
+  decoder_convs: 2      # convolutions per decoder block (1 = single-conv ablation)
+  num_decoder_blocks: 5 # 3 = "3 decoder blocks" ablation
+  dropout: 0.1          # segmentation-head dropout (0.0 = "w/o dropout" ablation)
+
+# NAFNet deblurring front-end + restoration-aware schedule.
+# This configuration yields ~16.96 M params / 2.98 GMACs at 128x128 (measured
+# with thop via src/complexity.py), matching the ~17.1 M / 2.78 GMACs reported
+# in Table 8 of the manuscript.
+nafnet:
+  width: 36
+  enc_blk_nums: [1, 1, 2, 8]
+  middle_blk_num: 4
+  dec_blk_nums: [1, 1, 1, 1]
+
+deblur:
+  epochs: 300           # Stage-1 NAFNet pre-training
+  lr: 1.0e-3
+  min_lr: 1.0e-6
+  lambda: 0.1           # weight of L_deblur in the composite objective (Eq. 16)
+  finetune_lr: 1.0e-5   # reduced lr for NAFNet during Stage-2 joint fine-tuning
+
+# Segmentation training (Adam, cosine annealing, 200 epochs, batch 16).
+train:
+  epochs: 200
+  batch_size: 16
+  lr: 1.0e-3
+  min_lr: 1.0e-6
+  weight_decay: 1.0e-4
+
+data:
+  # Path to the DeBlurWeedSeg "gt" folder (1300 composite PNG patches).
+  image_dir: ../Data for Improved Weed Segmentation in UAV Imagery of Sorghum Fields with a Combined Deblurring Segmentation Model/data/gt
+  # Path to the train/val/test split csvs. The stratified 70/15/15 splits used
+  # in the paper are provided in this repository under data_splits/.
+  splits_dir: data_splits
+  num_workers: 0   # data is cached in RAM; main-process loading avoids IPC overhead

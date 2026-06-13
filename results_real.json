@@ -1,0 +1,192 @@
+{
+  "encoder:ResNet-18": {
+    "dice_per_class": [
+      0.9974,
+      0.9,
+      0.8527
+    ],
+    "mDS": 0.9167,
+    "mIoU": 0.8521,
+    "mPrecision": 0.9166,
+    "mRecall": 0.9168,
+    "best_val_mDS": 0.9231,
+    "minutes": 9.0
+  },
+  "encoder:ResNet-34": {
+    "dice_per_class": [
+      0.9975,
+      0.9047,
+      0.857
+    ],
+    "mDS": 0.9198,
+    "mIoU": 0.857,
+    "mPrecision": 0.9254,
+    "mRecall": 0.9142,
+    "best_val_mDS": 0.9197,
+    "minutes": 14.4
+  },
+  "encoder:ResNet-50": {
+    "dice_per_class": [
+      0.9975,
+      0.8996,
+      0.8492
+    ],
+    "mDS": 0.9154,
+    "mIoU": 0.8501,
+    "mPrecision": 0.921,
+    "mRecall": 0.9101,
+    "best_val_mDS": 0.927,
+    "minutes": 51.1
+  },
+  "encoder:ResNet-101": {
+    "dice_per_class": [
+      0.9975,
+      0.8987,
+      0.846
+    ],
+    "mDS": 0.9141,
+    "mIoU": 0.8481,
+    "mPrecision": 0.9212,
+    "mRecall": 0.9071,
+    "best_val_mDS": 0.9254,
+    "minutes": 40.4
+  },
+  "ablation:Full Model": {
+    "dice_per_class": [
+      0.9975,
+      0.9047,
+      0.857
+    ],
+    "mDS": 0.9198,
+    "mIoU": 0.857,
+    "mPrecision": 0.9254,
+    "mRecall": 0.9142,
+    "best_val_mDS": 0.9197,
+    "minutes": 10.8
+  },
+  "ablation:w/o ImageNet Pretrain": {
+    "dice_per_class": [
+      0.9975,
+      0.9046,
+      0.8558
+    ],
+    "mDS": 0.9193,
+    "mIoU": 0.8563,
+    "mPrecision": 0.9248,
+    "mRecall": 0.9139,
+    "best_val_mDS": 0.9218,
+    "minutes": 12.5
+  },
+  "ablation:w/o Skip Connections": {
+    "dice_per_class": [
+      0.9962,
+      0.8624,
+      0.7953
+    ],
+    "mDS": 0.8847,
+    "mIoU": 0.8036,
+    "mPrecision": 0.8956,
+    "mRecall": 0.8743,
+    "best_val_mDS": 0.8823,
+    "minutes": 11.7
+  },
+  "ablation:w/o Dropout": {
+    "dice_per_class": [
+      0.9976,
+      0.9072,
+      0.8591
+    ],
+    "mDS": 0.9213,
+    "mIoU": 0.8594,
+    "mPrecision": 0.9336,
+    "mRecall": 0.9096,
+    "best_val_mDS": 0.9192,
+    "minutes": 12.8
+  },
+  "ablation:Single Conv Decoder": {
+    "dice_per_class": [
+      0.9975,
+      0.898,
+      0.8524
+    ],
+    "mDS": 0.916,
+    "mIoU": 0.8509,
+    "mPrecision": 0.9258,
+    "mRecall": 0.9066,
+    "best_val_mDS": 0.9245,
+    "minutes": 11.8
+  },
+  "ablation:3 Decoder Blocks": {
+    "dice_per_class": [
+      0.9957,
+      0.8402,
+      0.7681
+    ],
+    "mDS": 0.868,
+    "mIoU": 0.7798,
+    "mPrecision": 0.8825,
+    "mRecall": 0.8543,
+    "best_val_mDS": 0.8748,
+    "minutes": 10.3
+  },
+  "blur:WeedSeg-Scenario2": {
+    "sharp": 0.9198,
+    "blurred": 0.5961,
+    "combined": 0.7579
+  },
+  "blur:WeedSeg-Scenario1": {
+    "sharp": 0.892,
+    "blurred": 0.7295,
+    "combined": 0.8108
+  },
+  "blur:Proposed+DeBlur": {
+    "sharp": 0.8924,
+    "blurred": 0.7614,
+    "combined": 0.8223
+  },
+  "sota:Proposed": {
+    "mDS": 0.8223,
+    "mIoU": 0.7185,
+    "mPrecision": 0.8424,
+    "mRecall": 0.8067
+  },
+  "sota:DeepLabV3+ (w/o NAF)": {
+    "mDS": 0.7715,
+    "mIoU": 0.6587,
+    "mPrecision": 0.7564,
+    "mRecall": 0.788,
+    "minutes": 15.8
+  },
+  "sota:DeepLabV3+ (w/ NAF)": {
+    "mDS": 0.6108,
+    "mIoU": 0.5057,
+    "mPrecision": 0.7357,
+    "mRecall": 0.5461
+  },
+  "sota:U-Net++ (w/o NAF)": {
+    "mDS": 0.7829,
+    "mIoU": 0.6705,
+    "mPrecision": 0.7639,
+    "mRecall": 0.8215,
+    "minutes": 29.8
+  },
+  "sota:U-Net++ (w/ NAF)": {
+    "mDS": 0.6226,
+    "mIoU": 0.5163,
+    "mPrecision": 0.752,
+    "mRecall": 0.5593
+  },
+  "sota:FPN (w/o NAF)": {
+    "mDS": 0.7811,
+    "mIoU": 0.6689,
+    "mPrecision": 0.7554,
+    "mRecall": 0.8108,
+    "minutes": 12.5
+  },
+  "sota:FPN (w/ NAF)": {
+    "mDS": 0.6572,
+    "mIoU": 0.5445,
+    "mPrecision": 0.7634,
+    "mRecall": 0.5938
+  }
+}

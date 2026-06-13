@@ -1,0 +1,32 @@
+{
+  "title": "UNet-ResNet + NAFNet: deblurring-aware three-class crop/weed segmentation",
+  "description": "Reference implementation accompanying the manuscript by Li and Zou. Includes the UNet-ResNet three-class segmentation network (background, crop/sorghum, weed; ResNet-18/34/50/101 encoders), the NAFNet deblurring front-end, the two-stage restoration-aware training protocol, evaluation and complexity-analysis scripts, and the stratified 70/15/15 data splits over the public DeBlurWeedSeg dataset.",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Li, Qiyue",
+      "affiliation": "College of Plant Protection, Shandong Agricultural University"
+    },
+    {
+      "name": "Zou, Shenshen",
+      "affiliation": "College of Plant Protection, Shandong Agricultural University"
+    }
+  ],
+  "keywords": [
+    "semantic segmentation",
+    "plant health monitoring",
+    "UNet-ResNet",
+    "NAFNet deblurring",
+    "precision agriculture"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isDerivedFrom",
+      "identifier": "10.17632/k4gvsjv4t3.1",
+      "scheme": "doi",
+      "resource_type": "dataset"
+    }
+  ]
+}
