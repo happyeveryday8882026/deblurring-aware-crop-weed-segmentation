@@ -1,4 +1,4 @@
-# Unified Semantic Segmentation — UNet-ResNet + NAFNet (weed/crop)
+# Deblurring-Aware Semantic Segmentation of Crops and Weeds (UNet-ResNet + NAFNet)
 
 Reference implementation accompanying the manuscript by
 **Qiyue Li, Shenshen Zou** (College of Plant Protection, Shandong Agricultural
@@ -17,9 +17,10 @@ stratified 70/15/15 data splits.
 > the configuration, the data, and the splits are all consistent with one
 > another so the results are fully reproducible.
 
-> **DOI:** archived on Zenodo at `https://doi.org/10.5281/zenodo.XXXXXXX`
-> *(replace `XXXXXXX` with the DOI assigned after deposit; see
-> "Archiving on Zenodo" below).*
+> **Repository:** https://github.com/happyeveryday8882026/deblurring-aware-crop-weed-segmentation
+> Pre-trained weights are provided in the
+> [v1.0.0 release](https://github.com/happyeveryday8882026/deblurring-aware-crop-weed-segmentation/releases/tag/v1.0.0)
+> (see Section 4).
 
 ---
 
@@ -31,7 +32,6 @@ code/
 ├── LICENSE                      # MIT
 ├── requirements.txt
 ├── CITATION.cff                 # software + paper citation metadata
-├── .zenodo.json                 # Zenodo deposition metadata
 ├── CODE_AVAILABILITY.md         # text to paste into the manuscript
 ├── configs/
 │   └── default.yaml             # all hyper-parameters (matches Section 4)
@@ -95,13 +95,32 @@ python -m src.make_splits \
   --image-dir "/path/to/DeBlurWeedSeg/data/gt" --out data_splits --seed 0
 ```
 
-## 4. Quick start
+## 4. Pretrained weights
 
-Train the proposed segmentation model (ResNet-50) and test it:
+Pre-trained model weights are released as assets of the
+[**v1.0.0** release](https://github.com/happyeveryday8882026/deblurring-aware-crop-weed-segmentation/releases/tag/v1.0.0):
+
+- **NAFNet deblurring weights** — [`nafnet_real.pt`](https://github.com/happyeveryday8882026/deblurring-aware-crop-weed-segmentation/releases/download/v1.0.0/nafnet_real.pt) (64.9 MB)
+- **UNet-ResNet34 segmentation weights** — [`proposed_real.pt`](https://github.com/happyeveryday8882026/deblurring-aware-crop-weed-segmentation/releases/download/v1.0.0/proposed_real.pt) (158 MB)
+
+Command-line download:
+
+```bash
+wget https://github.com/happyeveryday8882026/deblurring-aware-crop-weed-segmentation/releases/download/v1.0.0/nafnet_real.pt
+wget https://github.com/happyeveryday8882026/deblurring-aware-crop-weed-segmentation/releases/download/v1.0.0/proposed_real.pt
+```
+
+Use them with the evaluation / pipeline commands below by passing the file
+path to the relevant `--checkpoint` / `--nafnet` flag (or place them under
+`runs/`).
+
+## 5. Quick start
+
+Train the proposed segmentation model (ResNet-34) and test it:
 
 ```bash
 python -m src.train_seg --config configs/default.yaml \
-  --encoder resnet50 --seed 0 --out runs/resnet50_seed0
+  --encoder resnet34 --seed 0 --out runs/resnet34_seed0
 ```
 
 Full restoration-aware pipeline (NAFNet pre-train → joint fine-tune):
@@ -111,24 +130,24 @@ Full restoration-aware pipeline (NAFNet pre-train → joint fine-tune):
 python -m src.train_deblur --config configs/default.yaml --out runs/nafnet
 # Stage 2: deblur + segmentation, jointly fine-tuned (lambda = 0.1)
 python -m src.train_restoration_aware --config configs/default.yaml \
-  --nafnet runs/nafnet/nafnet_best.pt --encoder resnet50 \
-  --seed 0 --out runs/pipeline_resnet50_seed0
+  --nafnet runs/nafnet/nafnet_best.pt --encoder resnet34 \
+  --seed 0 --out runs/pipeline_resnet34_seed0
 ```
 
 Evaluate any checkpoint:
 
 ```bash
 python -m src.evaluate --config configs/default.yaml \
-  --checkpoint runs/resnet50_seed0/best.pt --kind seg
+  --checkpoint runs/resnet34_seed0/best.pt --kind seg
 ```
 
 Complexity analysis:
 
 ```bash
-python -m src.complexity --config configs/default.yaml --encoder resnet50
+python -m src.complexity --config configs/default.yaml --encoder resnet34
 ```
 
-## 5. Reproducing the paper experiments
+## 6. Reproducing the paper experiments
 
 | Experiment                              | Script                                      |
 |-----------------------------------------|---------------------------------------------|
@@ -142,12 +161,12 @@ and standard deviation across the five `runs/*_seed{0..4}` outputs. All
 hyper-parameters are fixed in `configs/default.yaml`:
 
 * Optimiser: Adam (β₁=0.9, β₂=0.999), lr 1e-3, weight decay 1e-4
-* Schedule: cosine annealing to 1e-6, 200 epochs, batch size 16
+* Schedule: cosine annealing to 1e-6, 100 epochs, batch size 16
 * Segmentation loss: pixel-wise multi-class cross-entropy
-* NAFNet: 300-epoch L1 pre-training, then joint fine-tuning with the composite
+* NAFNet: 150-epoch L1 pre-training, then joint fine-tuning with the composite
   loss `L_seg + 0.1·L_deblur` (restoration lr reduced to 1e-5)
 
-## 6. Ablation flags (`src/train_seg.py`)
+## 7. Ablation flags (`src/train_seg.py`)
 
 | Flag                  | Configuration          |
 |-----------------------|------------------------|
@@ -157,23 +176,11 @@ hyper-parameters are fixed in `configs/default.yaml`:
 | `--decoder-convs 1`   | single-conv decoder    |
 | `--decoder-blocks 3`  | 3 decoder blocks       |
 
-## 7. Archiving on Zenodo (for the DOI requested by the editor)
-
-1. Sign in at https://zenodo.org with your ORCID/GitHub.
-2. Either link your GitHub repo and publish a release (Zenodo mints a DOI
-   automatically using `.zenodo.json` and `CITATION.cff`), **or** upload this
-   `code/` folder as a `.zip` via *New upload*. The metadata fields are
-   pre-filled from `.zenodo.json`.
-3. Publish. Copy the assigned DOI and paste it into:
-   * this README (top, "DOI:"),
-   * `CITATION.cff` (`doi:` field),
-   * the manuscript's **Code Availability** section (see `CODE_AVAILABILITY.md`).
-
 ## 8. License & citation
 
 Code released under the MIT License (see `LICENSE`). The DeBlurWeedSeg imagery
 remains subject to its original license. If you use this software, please cite
-both the paper and the Zenodo software record (see `CITATION.cff`).
+both the paper and this software repository (see `CITATION.cff`).
 
 ## 9. Acknowledgements
 
